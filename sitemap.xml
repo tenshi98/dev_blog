@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>./</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!--
+    Nota sobre URLs dinámicas:
+
+    Las publicaciones individuales se acceden mediante ?post=archivo.md
+    Los crawlers típicamente no indexan URLs con query parameters.
+
+    Para un SEO óptimo, se podrían generar páginas HTML estáticas
+    individuales para cada publicación. Sin embargo, este blog
+    utiliza una SPA con JavaScript, lo cual es una limitación
+    documentada del sistema.
+
+    Google puede renderizar JavaScript y seguir los enlaces,
+    por lo que las publicaciones podrán ser indexadas eventualmente.
+
+    Si se necesita SEO perfecto, considerar generar un sitemap
+    dinámicamente como parte de un GitHub Action que liste
+    todas las publicaciones.
+  -->
+</urlset>

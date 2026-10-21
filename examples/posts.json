@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "posts": [
+    {
+      "filename": "20260901-crear-un-blog-estatico.md",
+      "title": "Cómo crear un blog estático sin frameworks",
+      "excerpt": "Guía para construir un blog estático sin frameworks, usando HTML, CSS y JavaScript.",
+      "tags": [
+        "Tutorial",
+        "Blog",
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "date": "2026-09-01",
+      "content": "# Cómo crear un blog estático sin frameworks\n\nContenido Markdown de la publicación..."
+    },
+    {
+      "filename": "20260825-markdown-en-un-blog.md",
+      "title": "Markdown en un blog estático",
+      "excerpt": "Markdown es el formato de escritura elegido para este blog.",
+      "tags": [
+        "Markdown",
+        "Contenido",
+        "Escritura"
+      ],
+      "date": "2026-08-25",
+      "content": "# Markdown en un blog estático\n\nContenido Markdown de la publicación..."
+    },
+    {
+      "filename": "20260820-github-pages.md",
+      "title": "Publicando con GitHub Pages",
+      "excerpt": "GitHub Pages es un servicio de alojamiento estático gratuito para publicar sitios desde un repositorio.",
+      "tags": [
+        "GitHub",
+        "Deploy",
+        "Hosting"
+      ],
+      "date": "2026-08-20",
+      "content": "# Publicando con GitHub Pages\n\nContenido Markdown de la publicación..."
+    },
+    {
+      "filename": "20260815-aprendiendo-javascript.md",
+      "title": "Aprendiendo JavaScript moderno",
+      "excerpt": "Repaso de las características más útiles del JavaScript moderno (ES6+).",
+      "tags": [
+        "JavaScript",
+        "Programación",
+        "Web"
+      ],
+      "date": "2026-08-15",
+      "content": "# Aprendiendo JavaScript moderno\n\nContenido Markdown de la publicación..."
+    },
+    {
+      "filename": "20260810-mi-primer-post.md",
+      "title": "Mi primer post",
+      "excerpt": "Bienvenido al blog. Primer artículo publicado en este sitio estático.",
+      "tags": [
+        "Blog",
+        "Inicio"
+      ],
+      "date": "2026-08-10",
+      "content": "# Mi primer post\n\nContenido Markdown de la publicación..."
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+/* ============================================
+   Blog Estático - Estilos Responsive
+   ============================================ */
+
+/* --- Navegación: drawer lateral (estilo portafolio, ≤670px) --- */
+@media (max-width: 670px) {
+  .nav-container {
+    padding: 0 1rem;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 4.5rem;
+    right: -100vw;
+    visibility: hidden;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: calc(80% - 10px);
+    max-width: 320px;
+    padding: 2rem;
+    border-radius: 5px;
+    background: var(--bg-primary);
+    transition: right 0.3s ease, visibility 0.3s ease;
+    z-index: 101;
+  }
+
+  .nav-links.open {
+    right: 20px;
+    visibility: visible;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+    margin: 0 0.2rem;
+    padding: 0;
+    border-radius: 0;
+    width: auto;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+    cursor: pointer;
+  }
+}
+
+/* --- Tablet (max-width: 768px) --- */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .post-article-title {
+    font-size: 2.5rem;
+  }
+
+  .about-content h2 {
+    font-size: 2.5rem;
+  }
+
+  .main-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .search-box {
+    min-width: 100%;
+  }
+
+  .sort-select {
+    width: 100%;
+  }
+
+  .post-card {
+    padding: 1.25rem 1.35rem;
+  }
+
+  .post-card-title {
+    font-size: 1.2rem;
+  }
+
+  .markdown-content h1 {
+    font-size: 1.65rem;
+  }
+
+  .markdown-content h2 {
+    font-size: 1.35rem;
+  }
+
+  .markdown-content h3 {
+    font-size: 1.15rem;
+  }
+
+  .markdown-content pre {
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* --- Móvil pequeño (max-width: 480px) --- */
+@media (max-width: 480px) {
+  html {
+    font-size: 15px;
+  }
+
+  .post-card {
+    padding: 1rem 1.15rem;
+  }
+
+  .post-card-title {
+    font-size: 1.1rem;
+  }
+
+  .post-card-excerpt {
+    font-size: 0.9rem;
+  }
+
+  .post-article-title {
+    font-size: 1.5rem;
+  }
+
+  .page-btn {
+    min-width: 2rem;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.85rem;
+  }
+
+  .cta-all-posts {
+    width: 100%;
+  }
+
+  .markdown-content {
+    font-size: 1rem;
+  }
+
+  .markdown-content pre {
+    padding: 0.75rem;
+    border-radius: 6px;
+  }
+
+  .markdown-content blockquote {
+    padding: 0.85rem 1rem;
+  }
+
+  .markdown-content table {
+    font-size: 0.88rem;
+  }
+
+  .markdown-content th,
+  .markdown-content td {
+    padding: 0.5rem 0.6rem;
+  }
+}
+
+/* --- Reducir movimiento (accesibilidad) --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Alto contraste (accesibilidad) --- */
+@media (prefers-contrast: high) {
+  :root {
+    --border: #888;
+    --border-light: #999;
+    --text-secondary: #444;
+    --text-muted: #555;
+  }
+
+  [data-theme="dark"] {
+    --border: #aaa;
+    --border-light: #888;
+    --text-secondary: #ccc;
+    --text-muted: #bbb;
+  }
+}
+
+/* --- Impresión --- */
+@media print {
+  .site-header,
+  .site-footer,
+  .controls,
+  .list-footer,
+  .back-link,
+  .theme-toggle,
+  .mobile-menu-btn,
+  .back-grid,
+  .cursor-circle {
+    display: none !important;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+  }
+
+  .main-content {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .post-card {
+    break-inside: avoid;
+    border: 1px solid #ccc;
+    border-image: none;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .markdown-content pre {
+    border: 1px solid #ccc;
+    overflow: visible;
+  }
+}
