@@ -2,12 +2,13 @@
 
 Un blog estático, moderno, responsive y completamente funcional, diseñado específicamente para ser alojado en **GitHub Pages** sin necesidad de backend, frameworks ni procesos de compilación.
 
+Publica tus artículos en Markdown, genera un índice JSON con un solo comando y despliega todo como sitio estático.
+
 ## Índice
 
 * [Tecnologías utilizadas](#tecnologías-utilizadas)
 * [Estructura del proyecto](#estructura-del-proyecto)
 * [Cómo agregar una publicación](#cómo-agregar-una-publicación)
-
   * [Paso 1: Crear el archivo Markdown](#paso-1-crear-el-archivo-markdown)
   * [Paso 2: Escribir el contenido](#paso-2-escribir-el-contenido)
   * [Paso 3: Generar el índice](#paso-3-generar-el-índice)
@@ -15,21 +16,19 @@ Un blog estático, moderno, responsive y completamente funcional, diseñado espe
 * [Formato de nombres de archivos](#formato-de-nombres-de-archivos)
 * [Cómo agregar imágenes](#cómo-agregar-imágenes)
 * [Cómo publicar en GitHub Pages](#cómo-publicar-en-github-pages)
-
   * [1. Crear el repositorio](#1-crear-el-repositorio)
   * [2. Subir los archivos](#2-subir-los-archivos)
   * [3. Configurar GitHub Pages](#3-configurar-github-pages)
   * [4. Acceder al blog](#4-acceder-al-blog)
 * [Cómo personalizar el blog](#cómo-personalizar-el-blog)
-
   * [Cambiar el nombre del blog](#cambiar-el-nombre-del-blog)
   * [Cambiar colores](#cambiar-colores)
   * [Cambiar información personal](#cambiar-información-personal)
   * [Agregar Google Analytics](#agregar-google-analytics)
 * [Funcionalidades](#funcionalidades)
 * [Dependencia: Marked.js](#dependencia-markedjs)
-
   * [Usar versión local (recomendado para producción)](#usar-versión-local-recomendado-para-producción)
+* [Script de generación del índice](#script-de-generación-del-índice)
 * [Limitaciones](#limitaciones)
 * [Compatibilidad con GitHub Pages](#compatibilidad-con-github-pages)
 * [Licencia](#licencia)
@@ -43,6 +42,8 @@ Un blog estático, moderno, responsive y completamente funcional, diseñado espe
 | JavaScript (ES Modules) | Interactividad, routing, búsqueda |
 | Markdown | Formato de contenido de publicaciones |
 | Marked.js | Interpretación de Markdown a HTML (CDN) |
+| FontAwesome | Iconografía (CDN) |
+| Python 3 | Script de generación del índice (`posts.json`) |
 
 **No se utilizan:** React, Vue, Angular, Svelte, Astro, Next.js, Jekyll, Node.js, bases de datos, APIs backend, ni ningún framework o generador de sitios estáticos.
 
@@ -57,37 +58,52 @@ Un blog estático, moderno, responsive y completamente funcional, diseñado espe
 ├── README.md               # Este archivo
 │
 ├── css/
-│   ├── style.css           # Estilos principales y temas
+│   ├── style.css           # Estilos principales y temas (claro/oscuro)
 │   └── responsive.css      # Estilos responsive y media queries
 │
 ├── js/
-│   ├── config.js           # Configuración y ruta base
+│   ├── config.js           # Configuración y ruta base (BASE_PATH)
 │   ├── posts.js            # Gestión de publicaciones
 │   ├── markdown.js         # Procesamiento de Markdown
 │   ├── ui.js               # Interfaz y modo oscuro
 │   └── app.js              # Aplicación principal y routing
 │
 ├── scripts/
-│   └── build_posts.py      # Genera post/posts.json
+│   └── build_posts.py      # Genera post/posts.json a partir de los .md
 │
-├── post/
-│   ├── posts.json          # Índice generado con metadatos y contenido
+├── post/                   # Publicaciones reales (.md + índice generado)
+│   ├── posts.json          # Índice generado con metadatos y contenido (396 posts)
+│   ├── 20190101-*.md       # Publicaciones desde 2019
+│   └── 20261019-*.md       # Publicaciones más recientes
+│
+├── examples/               # Publicaciones de ejemplo y plantilla
+│   ├── posts.json          # Índice de ejemplo (5 publicaciones)
 │   ├── 20260810-mi-primer-post.md
 │   ├── 20260815-aprendiendo-javascript.md
 │   ├── 20260820-github-pages.md
 │   ├── 20260825-markdown-en-un-blog.md
 │   └── 20260901-crear-un-blog-estatico.md
 │
-└── assets/
-    ├── favicon.svg         # Favicon SVG
-    └── images/             # Carpeta para imágenes
+├── assets/
+│   └── favicon/            # Iconos del sitio (PNG, ICO, site.webmanifest)
+│       ├── favicon.ico
+│       ├── favicon-16x16.png
+│       ├── favicon-32x32.png
+│       ├── apple-touch-icon.png
+│       ├── android-chrome-192x192.png
+│       ├── android-chrome-512x512.png
+│       └── site.webmanifest
+│
+└── change_logs/            # Registros de cambios del proyecto
 ```
+
+> El directorio `post/` contiene las publicaciones reales del blog. El directorio `examples/` incluye 5 publicaciones de ejemplo más su `posts.json`, útiles como plantilla para entender el formato antes de crear las tuyas propias.
 
 ## Cómo agregar una publicación
 
 ### Paso 1: Crear el archivo Markdown
 
-El nombre del archivo debe seguir el formato `YYYYMMDD-titulo-descriptivo.md`:
+El nombre del archivo debe seguir el formato `YYYYMMDD-titulo-descriptivo.md` y guardarse en `post/`:
 
 ```
 post/20260915-mi-nueva-publicacion.md
@@ -115,6 +131,8 @@ Más contenido...
 ```
 
 Si no incluyes Front Matter, el título se extrae del primer `# Título` del archivo.
+
+Puedes consultar cualquiera de los archivos en `examples/` para ver el formato en uso.
 
 ### Paso 3: Generar el índice
 
@@ -172,11 +190,11 @@ GitHub Pages publicará automáticamente la nueva publicación.
 ❌ 09-01-mi-post.md        (fecha incompleta)
 ```
 
-La fecha del nombre se usa como **fecha principal de publicación** y determina el ordenamiento.
+La fecha del nombre se usa como **fecha principal de publicación** y determina el ordenamiento (más recientes primero).
 
 ## Cómo agregar imágenes
 
-1. Colocar la imagen en `assets/images/`:
+1. Colocar la imagen en una carpeta de recursos, por ejemplo `assets/images/` (crearla si no existe):
 
 ```
 assets/images/mi-imagen.jpg
@@ -217,14 +235,16 @@ git push origin main
 
 1. Ir al repositorio en GitHub
 2. **Settings** → **Pages**
-3. En **Source**, seleccionar la rama `main`
-4. En **Folder**, seleccionar `/ (root)`
-5. Click en **Save**
+3. En *Build and deployment* → *Source*, seleccionar **Deploy from a branch**
+4. Elegir la rama `main` y la carpeta `/ (root)`
+5. Guardar. GitHub Pages desplegará el sitio automáticamente
 
 ### 4. Acceder al blog
 
-- Si el repositorio es `usuario.github.io`: `https://usuario.github.io/`
-- Si el repositorio tiene otro nombre: `https://usuario.github.io/nombre-repo/`
+El blog estará disponible en:
+
+- `https://usuario.github.io/` (si el repositorio es `usuario.github.io`)
+- `https://usuario.github.io/mi-blog/` (en cualquier otro repositorio)
 
 ## Cómo personalizar el blog
 
@@ -235,7 +255,11 @@ Editar `js/config.js`:
 ```javascript
 export const BLOG_CONFIG = {
   name: 'Mi Blog Personal',
+  nameBlog: 'Mi Blog Personal',
+  title: 'Tu Nombre',
+  titleBar: 'Mi Blog',
   description: 'Una descripción personalizada de mi blog.',
+  author: 'Tu Nombre',
   // ...
 };
 ```
@@ -259,7 +283,7 @@ Editar las variables CSS en `css/style.css`:
 
 ### Cambiar información personal
 
-Editar la sección "Sobre mí" en `index.html` y el campo `author` en `js/config.js`.
+Editar la sección "Sobre mí" en `index.html` y el campo `author` en `js/config.js`. Los enlaces de redes sociales están en el `<footer>` de `index.html`.
 
 ### Agregar Google Analytics
 
@@ -288,7 +312,7 @@ Agregar antes de `</head>` en `index.html`:
 - ✅ Accesibilidad (HTML semántico, aria labels, skip link, focus visible)
 - ✅ Sanitización de HTML (elimina scripts, eventos inline)
 - ✅ Manejo de errores con mensajes claros
-- ✅ Favicon SVG
+- ✅ Favicon multiplataforma (PNG, ICO, webmanifest)
 - ✅ Compatible con GitHub Pages (raíz y subdirectorio)
 - ✅ Sin backend, sin compilación, sin dependencias de servidor
 
@@ -310,6 +334,18 @@ Este blog utiliza **Marked.js v15.0.12** vía CDN para convertir Markdown a HTML
 <!-- Reemplazar CDN por archivo local -->
 <script src="vendor/marked.min.js"></script>
 ```
+
+## Script de generación del índice
+
+`scripts/build_posts.py` recorre el directorio `post/`, lee cada archivo `.md`, extrae Front Matter y contenido, y genera `post/posts.json`.
+
+Ejecutar siempre que se añada, modifique o elimine una publicación:
+
+```bash
+python3 scripts/build_posts.py
+```
+
+El script valida que el nombre del archivo tenga formato `YYYYMMDD-titulo.md`, ordena los posts por fecha (descendente) y escribe el JSON con codificación UTF-8.
 
 ## Limitaciones
 
