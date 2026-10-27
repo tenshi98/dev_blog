@@ -2,6 +2,182 @@
   "version": 1,
   "posts": [
     {
+      "filename": "20261023-verificacion-manual-login-ui.md",
+      "title": "Verificado el inicio de sesión del backoffice en navegador",
+      "excerpt": "Se comprobó de extremo a extremo el formulario de acceso del panel de administración en un navegador real: el usuario introduce sus credenciales, el sistema las valida y lo lleva al panel principal co…",
+      "tags": [
+        "login",
+        "autenticacion",
+        "backoffice",
+        "navegador",
+        "validacion"
+      ],
+      "date": "2026-10-23",
+      "content": "# Verificado el inicio de sesión del backoffice en navegador\n\n## Resumen\n\nSe comprobó de extremo a extremo el formulario de acceso del panel de administración en un navegador real: el usuario introduce sus credenciales, el sistema las valida y lo lleva al panel principal con sus datos de perfil y widgets cargados.\n\n## Contenido del cambio\n\nLa prueba confirma que el acceso al backoffice funciona tal como lo ve el usuario final: la pantalla de inicio de sesión se muestra correctamente, acepta email y contraseña, y tras autenticar redirige al panel principal, donde aparece el nombre del usuario y el aviso para actualizar la contraseña si nunca se ha cambiado. No fue necesario crear cuentas nuevas ni modificar datos; se utilizó un usuario de demostración ya existente.\n"
+    },
+    {
+      "filename": "20261023-correccion-defectos-vehiculos.md",
+      "title": "Vehículos: exportación, filtros y detalle corregidos",
+      "excerpt": "Se corrigieron los defectos que las pruebas automáticas detectaron en el módulo de vehículos: la exportación a Excel vuelve a funcionar, el filtro del listado deja de fallar en el navegador y el detal…",
+      "tags": [
+        "vehiculos",
+        "correccion",
+        "exportacion",
+        "permisos",
+        "qa"
+      ],
+      "date": "2026-10-23",
+      "content": "# Vehículos: exportación, filtros y detalle corregidos\n\n## Resumen\n\nSe corrigieron los defectos que las pruebas automáticas detectaron en el módulo de vehículos: la exportación a Excel vuelve a funcionar, el filtro del listado deja de fallar en el navegador y el detalle muestra correctamente quién editó una observación.\n\n## Contenido del cambio\n\n- **Exportar a Excel:** ahora lista los datos propios del vehículo (patente, número de serie, capacidades, tipo de carga, ubicación, estado…); antes fallaba por arrastrar columnas de otro módulo.\n- **Filtro del listado:** se eliminó código sobrante que producía un error al cargar la pantalla.\n- **Detalle de observaciones:** vuelve a mostrar «Editado por … el …».\n- **Permisos:** con permiso de solo lectura ya no aparece el botón «Ver Archivo», que antes llevaba a una pantalla no disponible.\n"
+    },
+    {
+      "filename": "20261022-alarmas-personalizadas-maquinas.md",
+      "title": "Alarmas personalizadas por máquina: diseño funcional y técnico",
+      "excerpt": "Se definió el diseño completo del nuevo administrador de alarmas personalizadas por máquina, basado en los sensores ya configurados. El proyecto incluye ocho tipos de alarma, prioridades, validaciones…",
+      "tags": [
+        "maquinas",
+        "alarmas",
+        "sdd",
+        "sensores",
+        "json"
+      ],
+      "date": "2026-10-22",
+      "content": "# Alarmas personalizadas por máquina: diseño funcional y técnico\n\n## Resumen\n\nSe definió el diseño completo del nuevo administrador de alarmas personalizadas por máquina, basado en los sensores ya configurados. El proyecto incluye ocho tipos de alarma, prioridades, validaciones, catálogos propios y persistencia JSON, todo documentado antes de empezar a programar.\n\n## Contenido del cambio\n\nEl tab de Alarmas Personalizadas de una máquina dejará de ser una copia sin uso del gestor de documentos y pasará a ser un administrador real de alarmas. Cada alarma podrá configurarse con su tipo, prioridad, límite de errores, unidad de medida, estado y uno o más sensores activos.\n\nEl diseño contempla ocho tipos de alarma: alertas por rango, por valor específico, por errores conjuntos, por promedios y por porcentaje de diferencia entre sensores, además de la detección de sensores funcionando fuera de horario. El formulario mostrará únicamente los campos que correspondan al tipo elegido y explicará con textos claros qué significa cada configuración.\n\nLa información se guardará junto a la ficha de la máquina, igual que ya ocurre con sus sensores, y las alarmas se podrán ver, crear, editar y eliminar desde el mismo tab. El listado se presentará en tarjetas desplegables para facilitar la lectura, sin arrastre ni reordenamiento manual.\n"
+    },
+    {
+      "filename": "20261022-alarmas-personalizadas-maquinas-implementacion.md",
+      "title": "Alarmas personalizadas por máquina ya funcionan en el backoffice",
+      "excerpt": "El tab «Alarmas Personalizadas» de las máquinas dejó de ser una copia de Documentos y ahora permite crear, editar, ver y borrar alarmas reales. Cada alarma guarda su configuración y sus sensores en JS…",
+      "tags": [
+        "maquinas",
+        "alarmas",
+        "backoffice",
+        "json",
+        "instalador"
+      ],
+      "date": "2026-10-22",
+      "content": "# Alarmas personalizadas por máquina ya funcionan en el backoffice\n\n## Resumen\n\nEl tab «Alarmas Personalizadas» de las máquinas dejó de ser una copia de Documentos y ahora permite crear, editar, ver y borrar alarmas reales. Cada alarma guarda su configuración y sus sensores en JSON dentro de la propia máquina, con validaciones por tipo y sin permisos nuevos.\n\n## Contenido del cambio\n\n- Alta, edición, detalle y borrado de alarmas desde la ficha de cada máquina.\n- Ocho tipos de alarma con campos, ayudas y validaciones propias.\n- Selección de uno o varios sensores activos por alarma, con rangos, valores específicos, valores de encendido u horas según el tipo.\n- Listado en tarjetas desplegables con estado, tipo, prioridad y contador de errores.\n- Catálogos de tipos y prioridades sembrados automáticamente, sin crear permisos adicionales.\n- Las alarmas se guardan junto a la máquina, igual que los sensores, y se conservan al editar otros datos.\n"
+    },
+    {
+      "filename": "20261022-alarmas-personalizadas-maquinas-cierre-puntos.md",
+      "title": "Alarmas personalizadas: ayuda del tipo fuera de horario y rango de porcentaje",
+      "excerpt": "Se completó la documentación del proyecto de alarmas personalizadas con el texto de ayuda que faltaba para el tipo \"Sensor funcionando fuera de horario\". Además, se confirmó que el porcentaje de difer…",
+      "tags": [
+        "maquinas",
+        "alarmas",
+        "sdd",
+        "documentacion"
+      ],
+      "date": "2026-10-22",
+      "content": "# Alarmas personalizadas: ayuda del tipo fuera de horario y rango de porcentaje\n\n## Resumen\n\nSe completó la documentación del proyecto de alarmas personalizadas con el texto de ayuda que faltaba para el tipo \"Sensor funcionando fuera de horario\". Además, se confirmó que el porcentaje de diferencia entre sensores debe mantenerse entre 0 y 100.\n\n## Contenido del cambio\n\nEl formulario de alarmas ya tiene definido qué explicar cuando se elige el tipo \"Sensor funcionando fuera de horario\": el sistema avisará cuando el sensor se encuentre activo fuera del horario establecido entre la hora de inicio y la hora de término.\n\nTambién quedó confirmado que el campo de porcentaje de diferencia solo acepta valores entre 0 y 100, lo que evita configuraciones ambiguas o fuera de rango.\n\nCon esto, el diseño del formulario queda completo para los ocho tipos de alarma y no quedan dudas sobre la validación del porcentaje.\n"
+    },
+    {
+      "filename": "20261022-alarmas-filas-dinamicas-select2.md",
+      "title": "Alarmas de máquinas: alta sin filas precargadas y sensores dinámicos confiables",
+      "excerpt": "El formulario de nueva alarma ahora se abre sin filas de sensor precargadas. Además, cada fila que se agrega con el botón \"Agregar Sensor\" funciona de forma independiente, sin que su selector de senso…",
+      "tags": [
+        "maquinas",
+        "alarmas",
+        "formularios",
+        "select2"
+      ],
+      "date": "2026-10-22",
+      "content": "# Alarmas de máquinas: alta sin filas precargadas y sensores dinámicos confiables\n\n## Resumen\n\nEl formulario de nueva alarma ahora se abre sin filas de sensor precargadas. Además, cada fila que se agrega con el botón \"Agregar Sensor\" funciona de forma independiente, sin que su selector de sensores modifique filas anteriores.\n\n## Contenido del cambio\n\nAl crear una alarma, el usuario ya no encuentra una fila de sensor agregada por defecto: el formulario parte limpio y solo muestra las filas que él decida agregar con \"Agregar Sensor\".\n\nTambién se corrigió el comportamiento de los selectores de sensores en las filas nuevas. Antes, al agregar varias filas, el selector de una fila podía abrir o actualizar el de otra fila ya existente. Ahora cada fila mantiene su propio selector y sus propios valores, tanto en el alta como en la edición de alarmas.\n"
+    },
+    {
+      "filename": "20261021-terceros-entidades-listado-formulario-edicion.md",
+      "title": "Los clientes ya se pueden editar desde su resumen",
+      "excerpt": "La pestaña «Editar Datos» del resumen de clientes, que antes estaba vacía, ahora tiene el formulario completo con los datos básicos, comunes, representante legal, redes sociales y estado. Además se el…",
+      "tags": [
+        "terceros",
+        "clientes",
+        "formulario",
+        "limpieza"
+      ],
+      "date": "2026-10-21",
+      "content": "# Los clientes ya se pueden editar desde su resumen\n\n## Resumen\n\nLa pestaña «Editar Datos» del resumen de clientes, que antes estaba vacía, ahora tiene el formulario completo con los datos básicos, comunes, representante legal, redes sociales y estado. Además se eliminó código de borrado sin uso del listado.\n\n## Contenido del cambio\n\n- **Edición disponible:** se pueden modificar los datos del cliente y guardarlos; el resumen se refresca al terminar.\n- **Clave:** el campo de contraseña solo aparece si la opción del sistema lo permite.\n- **Limpieza:** el listado ya no arrastra una función de borrado que no tenía ruta ni botón.\n"
+    },
+    {
+      "filename": "20261020-validacion-datos-tablas-implementacion.md",
+      "title": "Validaciones de formularios alineadas con las columnas de la base de datos",
+      "excerpt": "Se completó la auditoría de validaciones de los 16 módulos del backoffice y se corrigieron los formularios que no respetaban el tipo o el largo de sus columnas. La matriz final no deja campos con regl…",
+      "tags": [
+        "validacion",
+        "dataCheck",
+        "base-de-datos",
+        "calidad",
+        "backoffice"
+      ],
+      "date": "2026-10-20",
+      "content": "# Validaciones de formularios alineadas con las columnas de la base de datos\n\n## Resumen\n\nSe completó la auditoría de validaciones de los 16 módulos del backoffice y se corrigieron los formularios que no respetaban el tipo o el largo de sus columnas. La matriz final no deja campos con reglas faltantes y el motor de validación ahora admite largos exactos y fechas con formato por campo.\n\n## Contenido del cambio\n\nLa revisión comparó cada campo enviado por los formularios con la definición real de su tabla. Se detectaron teléfonos, RUT, redes sociales y textos que podían superar el largo de la columna, identificadores que no se validaban como números y fechas que solo aceptaban el formato corto.\n\nAhora los formularios rechazan esos valores con un mensaje claro antes de llegar a la base de datos. El cambio cubre campañas, cotizaciones, entidades, facturación, máquinas, reservas, sistema, terceros, usuarios y vehículos, entre otros módulos.\n\nLa matriz de cobertura queda en `projects/validacion-datos-tablas/implementation/coverage-matrix.md` y sirve como referencia para futuras revisiones.\n"
+    },
+    {
+      "filename": "20261020-proyecto-validacion-datos-tablas.md",
+      "title": "Nuevo proyecto para auditar y completar las validaciones de datos del backoffice",
+      "excerpt": "Se creó un proyecto SDD para comparar las reglas de validación de los formularios con la definición real de las tablas. El objetivo es detectar campos sin validar, exigir largos exactos por columna y…",
+      "tags": [
+        "validacion",
+        "dataCheck",
+        "base-de-datos",
+        "sdd",
+        "calidad"
+      ],
+      "date": "2026-10-20",
+      "content": "# Nuevo proyecto para auditar y completar las validaciones de datos del backoffice\n\n## Resumen\n\nSe creó un proyecto SDD para comparar las reglas de validación de los formularios con la definición real de las tablas. El objetivo es detectar campos sin validar, exigir largos exactos por columna y mejorar la validación de fechas y horas antes de corregir los controladores.\n\n## Contenido del cambio\n\nEl backoffice cuenta con 16 módulos y casi un centenar de controladores que validan los datos de sus formularios mediante `dataCheck`. Hasta ahora no existía una revisión sistemática que confirmara que cada campo enviado por el usuario respeta el tipo y las restricciones de su columna en la base de datos.\n\nEl nuevo proyecto define el alcance, las reglas de comparación, las excepciones y las tareas necesarias para auditar los 94 controladores y las 79 tablas de los módulos. También planifica una extensión del motor de validación para comprobar largos exactos por columna y fechas con formato `datetime`, algo que hoy no era posible con las reglas globales.\n\nEl resultado esperado es una matriz de cobertura que permita ver, campo por campo, qué está validado, qué falta y qué queda justificadamente fuera de alcance.\n"
+    },
+    {
+      "filename": "20261020-migracion-validar-largo-maximo-por-campo.md",
+      "title": "Validación de longitud máxima exacta por campo",
+      "excerpt": "Los formularios de 16 módulos del backoffice ahora validan el largo máximo de cada campo contra el tamaño real de su columna, en lugar de aplicar un único límite a todos los campos de una regla. La mi…",
+      "tags": [
+        "validacion",
+        "dataCheck",
+        "ddl",
+        "largo-maximo",
+        "backoffice"
+      ],
+      "date": "2026-10-20",
+      "content": "# Validación de longitud máxima exacta por campo\n\n## Resumen\n\nLos formularios de 16 módulos del backoffice ahora validan el largo máximo de cada campo contra el tamaño real de su columna, en lugar de aplicar un único límite a todos los campos de una regla. La migración cubre 77 controllers y 103 métodos de validación, sin cambios de esquema ni de rutas.\n\n## Contenido del cambio\n\nAntes, una misma regla de longitud agrupaba campos con columnas de distinto tamaño. Eso permitía que algunos valores superaran la columna y se truncaran al guardar, mientras que otros quedaban innecesariamente limitados. Ahora cada campo tiene su propio máximo, tomado de la definición de la tabla.\n\nEl cambio se aplicó en campañas, cotizaciones, entidades, facturación, kanban, máquinas, productos, reservas de espacios, servicios, sistema, terceros, usuarios, vehículos, bodegas, archivos e IA. Los formularios siguen respondiendo con el mismo formato de error; solo cambia el límite aplicado a cada campo.\n\nLa matriz completa de campo, tabla, tipo y largo queda documentada en `projects/migracion-validar-largo-maximo-por-campo/implementation/migracion.csv`.\n"
+    },
+    {
+      "filename": "20261020-fix-widgets-orden-urls.md",
+      "title": "Orden de Widgets vuelve a guardar en la ruta correcta",
+      "excerpt": "La pantalla de Orden de Widgets seguía usando las direcciones antiguas administracion/... para guardar y recargar, que ya no existen tras el cambio a mantencionSistema/.... Se corrigieron y la suite d…",
+      "tags": [
+        "sistema",
+        "widgets",
+        "rutas",
+        "fix"
+      ],
+      "date": "2026-10-20",
+      "content": "# Orden de Widgets vuelve a guardar en la ruta correcta\n\n## Resumen\n\nLa pantalla de Orden de Widgets seguía usando las direcciones antiguas `administracion/...` para guardar y recargar, que ya no existen tras el cambio a `mantencionSistema/...`. Se corrigieron y la suite de pruebas del módulo lo confirma.\n\n## Contenido del cambio\n\n- Guardar el orden, Restablecer el orden por defecto y la recarga posterior usan ahora la ruta vigente `mantencionSistema/sistema/widgetsOrden`.\n- Detectado por la nueva suite de pruebas del módulo `sistema`.\n"
+    },
+    {
+      "filename": "20261020-fix-largo-maximo-valida-ddl.md",
+      "title": "Ajuste de límites de longitud válidos al DDL de columna",
+      "excerpt": "Se corrigieron doce reglas de validación de longitud máxima (ValidarLargoMaximoN) que aceptaban 255 caracteres en columnas de base de datos más cortas (60 o 120), evitando truncamiento silencioso al g…",
+      "tags": [
+        "validacion",
+        "ddl",
+        "truncamiento",
+        "largo-maximo"
+      ],
+      "date": "2026-10-20",
+      "content": "# Ajuste de límites de longitud válidos al DDL de columna\n\n## Resumen\n\nSe corrigieron doce reglas de validación de longitud máxima (`ValidarLargoMaximoN`) que aceptaban 255 caracteres en columnas de base de datos más cortas (60 o 120), evitando truncamiento silencioso al guardar productos, documentos de facturación/cobranza, vehículos, usuarios, terceros, sistemas y permisos.\n\n## Contenido del cambio\n\nAl guardar o editar registros en los módulos de productos, facturación/cobranza, vehículos, usuarios, terceros, sistemas y permisos, el servidor ya no aceptará valores de texto que superen la longitud real de la columna de la base de datos. Los límites se ajustaron al tamaño exacto de cada campo (por ejemplo, `N_Doc` pasa de 255 a 60 y `Patente` de 255 a 120), evitando que los datos se corten al escribirse.\n"
+    },
+    {
+      "filename": "20261020-correcciones-hallazgos-reservas-espacios.md",
+      "title": "Reservas: el borrado del listado vuelve a funcionar y se alinean rutas y permisos",
+      "excerpt": "Borrar una reserva desde el listado fallaba porque la pantalla enviaba el identificador con otro nombre del que esperaba el servidor; ahora funciona. También se completan dos rutas que el instalador p…",
+      "tags": [
+        "reservas_espacios",
+        "fix",
+        "instalador",
+        "testing"
+      ],
+      "date": "2026-10-20",
+      "content": "# Reservas: el borrado del listado vuelve a funcionar y se alinean rutas y permisos\n\n## Resumen\n\nBorrar una reserva desde el listado fallaba porque la pantalla enviaba el identificador con otro nombre del que esperaba el servidor; ahora funciona. También se completan dos rutas que el instalador publicaba sin método detrás y se corrige el tipo de permiso de los Espacios.\n\n## Contenido del cambio\n\n- **Borrado de reservas operativo:** el botón de borrar del listado de reservas envía ahora el dato correcto.\n- **Rutas sin método completadas:** las rutas de eliminar archivos de reservas y de exportar a Excel del informe ya tienen su método, sin lógica porque no manejan archivos ni exportan desde el servidor.\n- **Permiso de Espacios coherente:** se registra como mantenimiento simple, igual que sus rutas reales (en instalaciones nuevas).\n- **Teléfonos:** se verificó que el formulario del solicitante ya sigue el criterio del resto del sistema (solo dígitos); sin cambios.\n"
+    },
+    {
       "filename": "20261019-migracion-responsive-table-v6.md",
       "title": "Migración de fichas resumen: de responsiveTable a table_v6",
       "excerpt": "Se migraron 63 vistas y 102 llamadas de responsiveTable a tablev6, unificando las fichas resumen de 17 módulos con el patrón visual de bodegas: tema, iconos, encabezados y botones de copiado en email/…",

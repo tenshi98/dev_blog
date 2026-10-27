@@ -1,0 +1,202 @@
+#!/usr/bin/env python3
+"""Procesa archivos change_logs y los convierte a formato de post para posts.json"""
+from __future__ import annotations
+import json
+import re
+import sys
+from pathlib import Path
+
+EXCERPT_LENGTH = 200
+
+ROOT = Path(__file__).resolve().parent.parent
+CHANGE_LOGS_DIR = ROOT / "change_logs"
+POSTS_DIR = ROOT / "post"
+OUTPUT = POSTS_DIR / "posts.json"
+
+FRONT_MATTER_RE = re.compile(r"^---\s*\n([\s\S]*?)\n---\s*\n")
+FILENAME_RE = re.compile(r"^(\d{8})-(.+)\.md$")
+H1_RE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
+SIMPLE_PROPERTY_RE = re.compile(r"^(\w[\w-]*):\s*(.+)$")
+LIST_PROPERTY_RE = re.compile(r"^(\w[\w-]*):\s*$")
+LIST_ITEM_RE = re.compile(r"^\s+-\s+(.+)$")
+
+
+def parse_front_matter(text: str) -> tuple[dict, str]:
+    match = FRONT_MATTER_RE.match(text)
+    if not match:
+        return {}, text
+
+    metadata: dict = {}
+    current_key = None
+
+    for line in match.group(1).splitlines():
+        simple = SIMPLE_PROPERTY_RE.match(line)
+        if simple:
+            current_key = simple.group(1)
+            metadata[current_key] = simple.group(2).strip()
+            continue
+
+        list_start = LIST_PROPERTY_RE.match(line)
+        if list_start:
+            current_key = list_start.group(1)
+            metadata[current_key] = []
+            continue
+
+        item = LIST_ITEM_RE.match(line)
+        if item and current_key and isinstance(metadata.get(current_key), list):
+            metadata[current_key].append(item.group(1).strip())
+
+    return metadata, text[match.end():]
+
+
+def normalize_tags(value) -> list[str]:
+    if isinstance(value, str):
+        raw = value.strip()
+        if raw.startswith("[") and raw.endswith("]"):
+            raw = raw[1:-1]
+        return [tag.strip().strip('"').strip("'") for tag in raw.split(",") if tag.strip()]
+    if isinstance(value, list):
+        return [str(tag).strip().strip('"').strip("'") for tag in value if str(tag).strip()]
+    return []
+
+
+def strip_inline_markdown(text: str) -> str:
+    text = re.sub(r"!\[([^\]]*)\]\([^)]+\)", r"\1", text)
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    text = re.sub(r"`([^`]+)`", r"\1", text)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"[*_~#>|]", "", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
+def truncate(text: str, max_length: int = EXCERPT_LENGTH) -> str:
+    if len(text) <= max_length:
+        return text
+    return text[:max_length].rstrip() + "…"
+
+
+def extract_excerpt(metadata: dict, body: str) -> str:
+    description = metadata.get("description")
+    if isinstance(description, str) and description.strip():
+        return truncate(strip_inline_markdown(description))
+
+    for block in re.split(r"\n\s*\n", body):
+        stripped = block.strip()
+        if not stripped:
+            continue
+
+        first_line = stripped.splitlines()[0].strip()
+        if re.match(r"^(#{1,6}\s|[-*+]\s|\d+\.\s|>|\||```|~~~|<|[-_]{3,}\s*$)", first_line):
+            continue
+
+        text = strip_inline_markdown(stripped)
+        if text:
+            return truncate(text)
+
+    return ""
+
+
+def extract_title(metadata: dict, body: str) -> str:
+    title = metadata.get("title")
+    if isinstance(title, str) and title.strip():
+        return title.strip()
+
+    heading = H1_RE.search(body)
+    if heading:
+        return strip_inline_markdown(heading.group(1))
+
+    return "Sin título"
+
+
+def parse_date(filename: str) -> str | None:
+    match = FILENAME_RE.match(filename)
+    if not match:
+        return None
+
+    raw = match.group(1)
+    try:
+        date(int(raw[:4]), int(raw[4:6]), int(raw[6:8]))
+    except ValueError:
+        return None
+
+    return f"{raw[:4]}-{raw[4:6]}-{raw[6:8]}"
+
+
+def build_post_from_changelog(filename: str, metadata: dict, body: str) -> dict | None:
+    # Usar la fecha del front matter si está disponible, sino intentar parsear del nombre
+    post_date = metadata.get("fecha")
+    if not post_date:
+        post_date = parse_date(filename)
+        if post_date is None:
+            print(f"Omitido (fecha no válida): {filename}", file=sys.stderr)
+            return None
+
+    title = extract_title(metadata, body)
+    excerpt = extract_excerpt(metadata, body)
+    tags = normalize_tags(metadata.get("tags"))
+
+    post = {
+        "filename": filename,
+        "title": title,
+        "excerpt": excerpt,
+        "tags": tags,
+        "date": post_date,
+        "content": body,
+    }
+
+    if post["title"] == "Sin título":
+        print(f"Aviso (sin título): {filename}", file=sys.stderr)
+
+    return post
+
+
+def main() -> int:
+    if not CHANGE_LOGS_DIR.is_dir():
+        print(f"No existe el directorio {CHANGE_LOGS_DIR}", file=sys.stderr)
+        return 1
+
+    existing_posts = []
+    if OUTPUT.is_file():
+        try:
+            with open(OUTPUT, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                existing_posts = data.get("posts", [])
+        except Exception as e:
+            print(f"Advertencia: No se pudo cargar posts existentes: {e}", file=sys.stderr)
+
+    posts = existing_posts.copy()
+
+    for path in sorted(CHANGE_LOGS_DIR.glob("*.md")):
+        filename = path.name
+        text = path.read_text(encoding="utf-8")
+        metadata, body = parse_front_matter(text)
+
+        raw_date = metadata.get("fecha")
+        if raw_date:
+            post_date = raw_date
+        else:
+            post_date = parse_date(filename)
+            if post_date is None:
+                print(f"Omitido (fecha no válida): {filename}", file=sys.stderr)
+                continue
+
+        post = build_post_from_changelog(filename, metadata, body)
+        if post is not None:
+            posts.append(post)
+            print(f"Procesado: {filename} - {post['title']}")
+
+    posts.sort(key=lambda item: (item["date"], item["filename"]), reverse=True)
+
+    payload = {"version": 1, "posts": posts}
+    OUTPUT.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    print(f"Generado {OUTPUT.relative_to(ROOT)} con {len(posts)} publicaciones.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
