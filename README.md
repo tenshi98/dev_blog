@@ -69,10 +69,11 @@ Publica tus artículos en Markdown, genera un índice JSON con un solo comando y
 │   └── app.js              # Aplicación principal y routing
 │
 ├── scripts/
-│   └── build_posts.py      # Genera post/posts.json a partir de los .md
+│   ├── build_posts.py      # Genera post/posts.json a partir de los .md
+│   └── ejecutar.sh          # Script bash para ejecutar build_posts.py
 │
 ├── post/                   # Publicaciones reales (.md + índice generado)
-│   ├── posts.json          # Índice generado con metadatos y contenido (396 posts)
+│   ├── posts.json          # Índice generado con metadatos y contenido (409 posts)
 │   ├── 20190101-*.md       # Publicaciones desde 2019
 │   └── 20261019-*.md       # Publicaciones más recientes
 │
@@ -84,7 +85,7 @@ Publica tus artículos en Markdown, genera un índice JSON con un solo comando y
 │   ├── 20260825-markdown-en-un-blog.md
 │   └── 20260901-crear-un-blog-estatico.md
 │
-├── assets/
+└── assets/
 │   └── favicon/            # Iconos del sitio (PNG, ICO, site.webmanifest)
 │       ├── favicon.ico
 │       ├── favicon-16x16.png
@@ -93,8 +94,6 @@ Publica tus artículos en Markdown, genera un índice JSON con un solo comando y
 │       ├── android-chrome-192x192.png
 │       ├── android-chrome-512x512.png
 │       └── site.webmanifest
-│
-└── change_logs/            # Registros de cambios del proyecto
 ```
 
 > El directorio `post/` contiene las publicaciones reales del blog. El directorio `examples/` incluye 5 publicaciones de ejemplo más su `posts.json`, útiles como plantilla para entender el formato antes de crear las tuyas propias.
@@ -140,6 +139,12 @@ No edites `post/posts.json` a mano. Ejecuta el script desde la raíz del proyect
 
 ```bash
 python3 scripts/build_posts.py
+```
+
+O ejecuta directamente el script incluido:
+
+```bash
+./scripts/ejecutar.sh
 ```
 
 El script lee todos los `.md` de `post/`, extrae `title`, `description`, `tags`, la fecha del nombre y el contenido, y regenera el índice:
@@ -339,10 +344,18 @@ Este blog utiliza **Marked.js v15.0.12** vía CDN para convertir Markdown a HTML
 
 `scripts/build_posts.py` recorre el directorio `post/`, lee cada archivo `.md`, extrae Front Matter y contenido, y genera `post/posts.json`.
 
+También puede ejecutarse de forma rápida con el script incluido:
+
+```bash
+./scripts/ejecutar.sh
+```
+
 Ejecutar siempre que se añada, modifique o elimine una publicación:
 
 ```bash
 python3 scripts/build_posts.py
+# o simplemente:
+./scripts/ejecutar.sh
 ```
 
 El script valida que el nombre del archivo tenga formato `YYYYMMDD-titulo.md`, ordena los posts por fecha (descendente) y escribe el JSON con codificación UTF-8.
@@ -351,7 +364,7 @@ El script valida que el nombre del archivo tenga formato `YYYYMMDD-titulo.md`, o
 
 | Limitación | Explicación |
 |-----------|------------|
-| Índice generado | Hay que ejecutar `python3 scripts/build_posts.py` al agregar o modificar publicaciones |
+| Índice generado | Hay que ejecutar `python3 scripts/build_posts.py` (o `./scripts/ejecutar.sh`) al agregar o modificar publicaciones |
 | URLs dinámicas | Las publicaciones usan `?post=archivo.md`, crawlers pueden no indexarlas todas |
 | Sin comentarios | No hay sistema de comentarios (podría agregarse Disqus/u otro) |
 | Sin búsqueda server-side | La búsqueda carga todo el contenido en el cliente |
