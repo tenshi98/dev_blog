@@ -2,6 +2,282 @@
   "version": 1,
   "posts": [
     {
+      "filename": "20261110-exportar-excel-cliente-informe-reservas.md",
+      "title": "\"Exportar a Excel: patrón del cliente y documentación\"",
+      "excerpt": "El Informe de reservas exporta a Excel desde el navegador, como el resto del sistema, y el patrón quedó documentado.",
+      "tags": [
+        "excel",
+        "documentacion"
+      ],
+      "date": "2026-11-10",
+      "content": "# Exportar a Excel: patrón del cliente y documentación\n\n## Resumen\n\nEl Informe de reservas exporta a Excel desde el navegador, como el resto del sistema, y el patrón quedó documentado.\n\n## Descripción\n\n### Contexto\nEl informe tenía una descarga generada en el servidor, distinta a la forma habitual de exportar.\n\n### Porqué\nMantener una sola manera de exportar, sin dependencias de servidor, y dejar una guía para futuras pantallas.\n\n### Descripción\nEl botón Exportar a Excel descarga todas las filas del filtro, no solo la página visible de la tabla. Se quitó la ruta de exportación del servidor. La guía está en `docs/architecture/ui/export-excel.md`.\n\n## Contenido del cambio\n\nEl archivo descargado es un `.xls` en formato HTML; Excel puede avisar del formato al abrirlo.\n"
+    },
+    {
+      "filename": "20261107-detalles-campanas-tooltip-sin-prefijo.md",
+      "title": "El tooltip del informe de campañas muestra el nombre tal como aparece en la tabla",
+      "excerpt": "Al pasar el cursor por un punto del gráfico, el nombre de la campaña aparece ahora tal como se ve en la primera columna de la tabla del informe, sin el prefijo \"Campaña\". La fecha se mantiene en la lí…",
+      "tags": [
+        "Campañas",
+        "Informes",
+        "Gráficos"
+      ],
+      "date": "2026-11-07",
+      "content": "# El tooltip del informe de campañas muestra el nombre tal como aparece en la tabla\n\n## Resumen\n\nAl pasar el cursor por un punto del gráfico, el nombre de la campaña aparece ahora tal como se ve en la primera columna de la tabla del informe, sin el prefijo \"Campaña\". La fecha se mantiene en la línea de abajo.\n\n## Descripción\n\n### Contexto\n\nEn la versión anterior del informe, el tooltip de los gráficos anteponía la palabra \"Campaña\" al nombre del registro para dar contexto. La tabla de resultados, en cambio, muestra ese nombre sin prefijo.\n\n### Porqué\n\nEl usuario pidió que el dato del título coincida con el valor que ya conoce de la tabla (columna `Fact.Compra.Nro`), para evitar dos formas distintas de nombrar la misma campaña en la misma pantalla.\n\n### Descripción\n\nSe eliminó el prefijo literal del título del tooltip. Ahora se muestra el nombre de la campaña tal cual y, debajo, la fecha con el formato día-mes-año. No cambian el eje del gráfico, las series ni la tabla.\n\n## Contenido del cambio\n\n- Título del tooltip igual al nombre que aparece en la primera columna de la tabla.\n- Fecha de la campaña en la segunda línea, sin cambios.\n- Sin modificaciones en los datos ni en los permisos.\n\n## Notas\n\nNo requiere ninguna acción por parte de los usuarios.\n"
+    },
+    {
+      "filename": "20261107-detalles-campanas-tooltip-fecha.md",
+      "title": "La fecha de cada campaña aparece al pasar el cursor por el gráfico",
+      "excerpt": "El detalle de campañas muestra ahora, al pasar el cursor sobre un punto del gráfico, el nombre de la campaña y su fecha en una línea aparte. Antes solo se veía el nombre.",
+      "tags": [
+        "Campañas",
+        "Informes",
+        "Gráficos"
+      ],
+      "date": "2026-11-07",
+      "content": "# La fecha de cada campaña aparece al pasar el cursor por el gráfico\n\n## Resumen\n\nEl detalle de campañas muestra ahora, al pasar el cursor sobre un punto del gráfico, el nombre de la campaña y su fecha en una línea aparte. Antes solo se veía el nombre.\n\n## Descripción\n\n### Contexto\n\nLos gráficos del informe de detalle de campañas tienen una etiqueta por campaña en el eje horizontal. El cuadro que aparece al pasar el cursor (tooltip) mostraba únicamente esa etiqueta, sin la fecha, por lo que dos campañas con nombres parecidos podían confundirse.\n\n### Porqué\n\nAl comparar costos, ventas, pérdidas y margen entre campañas, la fecha es el dato que permite situar cada punto en el tiempo. El usuario pidió verla junto al nombre, en una segunda línea para no recargar el encabezado.\n\n### Descripción\n\nSe añadió la fecha de cada campaña a los datos que alimentan los gráficos, con el mismo orden que las etiquetas del eje. El título del tooltip se compone ahora como \"Campaña <nombre> / Fecha :\" y la fecha aparece en la línea siguiente. El eje horizontal sigue mostrando solo el nombre, y los valores de las series mantienen el formato en pesos.\n\n## Contenido del cambio\n\n- Tooltip con nombre de campaña y fecha en dos líneas.\n- Etiquetas del eje sin cambios, para mantener el gráfico legible.\n- Formato de fecha día-mes-año.\n\n## Notas\n\nNo requiere ninguna acción por parte de los usuarios.\n"
+    },
+    {
+      "filename": "20261107-detalles-campanas-orden-graficos.md",
+      "title": "Los gráficos del informe de campañas ahora siguen el orden de las fechas",
+      "excerpt": "Los gráficos del detalle de campañas ordenan los productos alfabéticamente y, dentro de cada uno, las campañas de más antigua a más reciente. Antes las campañas aparecían en el orden interno de la bas…",
+      "tags": [
+        "Campañas",
+        "Informes",
+        "Gráficos"
+      ],
+      "date": "2026-11-07",
+      "content": "# Los gráficos del informe de campañas ahora siguen el orden de las fechas\n\n## Resumen\n\nLos gráficos del detalle de campañas ordenan los productos alfabéticamente y, dentro de cada uno, las campañas de más antigua a más reciente. Antes las campañas aparecían en el orden interno de la base de datos.\n\n## Descripción\n\n### Contexto\n\nEl informe de detalle de campañas muestra un gráfico por producto. La consulta de campañas devuelve los registros del más nuevo al más antiguo, y ese era el orden que heredaba el eje del gráfico, por lo que la comparación visual no seguía una línea temporal.\n\n### Porqué\n\nPara comparar la evolución de costos, ventas, pérdidas y margen entre campañas, el eje debe leerse de izquierda a derecha en orden cronológico. También conviene que los productos aparezcan siempre en el mismo orden alfabético.\n\n### Descripción\n\nSe añadió la fecha de la campaña a los datos que alimentan los gráficos y se ordenan las etiquetas del eje por fecha ascendente, usando el identificador como desempate cuando dos campañas comparten fecha. Los productos se ordenan alfabéticamente sin distinguir mayúsculas de minúsculas. El cambio no altera la tabla de resultados ni las consultas de importes.\n\n## Contenido del cambio\n\n- Eje de los gráficos en orden cronológico, de la campaña más antigua a la más reciente.\n- Productos ordenados alfabéticamente, con un orden estable entre búsquedas.\n- Sin cambios en los importes, en la tabla ni en los permisos.\n\n## Notas\n\nNo requiere ninguna acción por parte de los usuarios.\n"
+    },
+    {
+      "filename": "20261107-detalles-campanas-graficos-apexcharts.md",
+      "title": "Los gráficos del informe de campañas vuelven a mostrarse",
+      "excerpt": "El informe de detalle de campañas ya pinta un gráfico por producto con costos, ventas, pérdidas y margen, comparando las campañas del filtro. Antes la sección de gráficos aparecía vacía y la tabla pod…",
+      "tags": [
+        "Campañas",
+        "Informes",
+        "Gráficos"
+      ],
+      "date": "2026-11-07",
+      "content": "# Los gráficos del informe de campañas vuelven a mostrarse\n\n## Resumen\n\nEl informe de detalle de campañas ya pinta un gráfico por producto con costos, ventas, pérdidas y margen, comparando las campañas del filtro. Antes la sección de gráficos aparecía vacía y la tabla podía fallar cuando el filtro no encontraba campañas.\n\n## Descripción\n\n### Contexto\n\nLa pantalla \"Detalle Campañas\" permite filtrar por rango de fechas, estado, campaña y producto. Sobre la tabla de resultados se mostraba un bloque de gráficos por producto que nunca llegaba a dibujarse: el navegador buscaba una librería de gráficos que la aplicación no carga y el dibujo se lanzaba en un momento en que la página ya estaba cargada, por lo que el evento esperado no ocurría.\n\nAdemás, los datos que debían alimentar esos gráficos nunca se enviaban desde el servidor y el nombre del producto llegaba vacío. Del lado de las consultas, el resumen de pérdidas podía atribuir importes a una campaña distinta de la real.\n\n### Porqué\n\nEl informe existe para comparar el resultado de cada campaña por producto. Sin gráficos, esa comparación obliga a leer la tabla completa y no hay una lectura visual del margen. En el caso de filtros sin resultados, la pantalla mostraba un error en lugar de una tabla vacía.\n\n### Descripción\n\nSe alineó la vista con el mismo patrón que ya usan los widgets del panel principal: los datos se preparan en el servidor y se imprimen en la página, y el gráfico se crea con la librería que la aplicación ya carga (ApexCharts). Cada producto tiene su propio gráfico, con una etiqueta por campaña y cuatro series: costos, ventas, pérdidas y margen (ventas menos costos).\n\nTambién se corrigió la consulta que resumía las pérdidas para que agrupe por campaña y producto, se evitó un error de base de datos cuando el filtro no devuelve ninguna campaña y se completó el nombre del producto desde cualquiera de las tres fuentes de datos. La tabla conserva su estructura y ahora escapa los textos que provienen de la base de datos.\n\n## Contenido del cambio\n\n- Gráficos de área por producto en el informe de detalle de campañas, con tooltip en pesos y etiquetas de campaña.\n- La sección de gráficos se redibuja correctamente al repetir la búsqueda, sin acumular gráficos anteriores.\n- Filtros sin resultados muestran la tabla vacía, no un error.\n- Los importes de pérdidas quedan asociados a su campaña real.\n- Nombres de producto siempre visibles en la tabla y en los gráficos.\n\n## Notas\n\nNo hay cambios en la base de datos, en rutas ni en permisos. No se requiere ninguna acción por parte de los usuarios.\n"
+    },
+    {
+      "filename": "20261106-tasks-validaciones-promociones.md",
+      "title": "\"Guarda previa al Begin documentada y validaciones de Promociones planificadas\"",
+      "excerpt": "La plantilla 08 de casos de escritura incluye ahora la variante de guarda previa al Begin. Se planifican en tasks dos validaciones nuevas de Promociones (vigencia y tope de Valor).",
+      "tags": [
+        "documentacion",
+        "sdd",
+        "promociones"
+      ],
+      "date": "2026-11-06",
+      "content": "# Guarda previa al Begin documentada y validaciones de Promociones planificadas\n\n## Resumen\n\nLa plantilla 08 de casos de escritura incluye ahora la variante de guarda previa al Begin. Se planifican en tasks dos validaciones nuevas de Promociones (vigencia y tope de Valor).\n\n## Descripción\n\n### Contexto\n\nEstados, Tarifas y Promociones validan los dependientes antes de abrir la transacción, algo que la plantilla 08 no recogía. La spec de Promociones no validaba el rango de vigencia ni el tope de `Valor`.\n\n### Porqué\n\nAlinear la documentación con el código real y cubrir esos dos huecos sin alterar lo existente.\n\n### Descripción\n\n- `docs/architecture/write-cases/templates/08.md`: sección \"Variante validada: guarda previa al Begin\" (`Base_GetCountData`, 400 con dependientes, 500 si falla la consulta); la variante original se conserva.\n- `projects/reserva_servicios_admin`: TASK-005.5 (005.5.1 a 005.5.3), 005.6 y 005.7; RN-004b en la spec funcional, nota técnica y desviaciones.\n\n## Contenido del cambio\n\nPromociones rechazará con 400 `VigenciaHasta < VigenciaDesde` y un `Valor` fuera de rango (porcentaje 0 < Valor <= 100; monto Valor > 0), antes de escribir.\n\n## Notas\n\nSin breaking changes ni acción requerida. El código se implementa al ejecutar las tasks.\n"
+    },
+    {
+      "filename": "20261106-tasks-timeout-hijo-formato-valor-promociones.md",
+      "title": "\"Planificadas dos mejoras en Promociones: pruebas más robustas y valores con % o $\"",
+      "excerpt": "Se planifican en tasks dos mejoras de Promociones: un límite de tiempo para las pruebas automáticas y mostrar el valor como porcentaje o monto según el tipo.",
+      "tags": [
+        "sdd",
+        "promociones"
+      ],
+      "date": "2026-11-06",
+      "content": "# Planificadas dos mejoras en Promociones: pruebas más robustas y valores con % o $\n\n## Resumen\n\nSe planifican en tasks dos mejoras de Promociones: un límite de tiempo para las pruebas automáticas y mostrar el valor como porcentaje o monto según el tipo.\n\n## Descripción\n\n### Contexto\n\nLas pruebas de Promociones podían quedarse esperando indefinidamente si un proceso auxiliar se colgaba, y el valor se mostraba solo como número.\n\n### Porqué\n\nEvitar bloqueos en la pantalla de testeos y hacer el valor más legible.\n\n### Descripción\n\nHabrá un corte a los 10 segundos en las pruebas y el valor aparecerá como `25,50 %` o `$ 25.000,50`, con una única función que permitirá añadir tipos nuevos en un solo lugar.\n\n## Contenido del cambio\n\nSolo planificación (tasks TASK-005.8 a 005.14); el código se implementa al ejecutarlas.\n\n## Notas\n\nSin breaking changes ni acción requerida.\n"
+    },
+    {
+      "filename": "20261106-tarifas-solape-solo-activas.md",
+      "title": "\"Tarifas: el solape solo mirará las activas\"",
+      "excerpt": "",
+      "tags": [
+        "reservas_servicios",
+        "tarifas"
+      ],
+      "date": "2026-11-06",
+      "content": "# Tarifas: el solape solo mirará las activas\n\n## Descripción\n\n### Contexto\nAl guardar una tarifa se comprueba que su vigencia no se solape con otras del mismo servicio y variante.\n\n### Porqué\nHoy también cuentan las tarifas inactivas, que no deberían impedir guardar una nueva.\n\n### Detalle\nSe planificó el cambio para que solo se comparen las activas, con sus pruebas y su revisión. Queda pendiente decidir si una tarifa inactiva que se guarda también salta la comprobación, y que no se podrá repetir la misma fecha de inicio aunque la existente esté inactiva.\n"
+    },
+    {
+      "filename": "20261106-tarifas-indice-no-unico-tasks.md",
+      "title": "\"Tarifas: se planifica quitar el índice único de vigencia\"",
+      "excerpt": "",
+      "tags": [
+        "reservas_servicios",
+        "tarifas",
+        "installer"
+      ],
+      "date": "2026-11-06",
+      "content": "# Tarifas: se planifica quitar el índice único de vigencia\n\n## Descripción\n\n### Contexto\nEl installer creaba un índice único (servicio, variante, VigenciaDesde) en las tarifas.\n\n### Porqué\nImpedía repetir la misma fecha de inicio aunque la tarifa existente estuviera inactiva, contra lo definido en la regla de solape.\n\n### Detalle\nSe crean tres tareas: sustituir el índice único por uno no único (y eliminar el antiguo en instalaciones existentes), ajustar las pruebas y re-verificar. La integridad del solape queda en la validación de la aplicación. Aún no se ha tocado código.\n"
+    },
+    {
+      "filename": "20261106-reserva-listado-fecha-pasada-vaciar-opcionales.md",
+      "title": "\"Reservas: sin fecha pasada en el alta y opcionales vaciables en la edición\"",
+      "excerpt": "",
+      "tags": [
+        "reservas",
+        "fix"
+      ],
+      "date": "2026-11-06",
+      "content": "# Reservas: sin fecha pasada en el alta y opcionales vaciables en la edición\n\n## Descripción\n\n### Contexto\nEl alta de reservas aceptaba fechas pasadas y la edición no permitía quitar trabajador, responsable ni documento de facturación.\n\n### Por qué\nLa regla RN-010 exige no crear reservas en el pasado, y desasignar un trabajador es una operación legítima.\n\n### Detalle\n- El alta responde 400 si la fecha es anterior a hoy (zona America/Santiago); hoy y futuro se aceptan. La edición no valida esto, para poder corregir reservas históricas.\n- Al editar, trabajador, responsable y facturación enviados vacíos pasan a NULL en la misma transacción. Si se quita el trabajador se libera su agenda y se registra el evento \"Trabajador desasignado\".\n- Nuevos casos en la suite del módulo. Detalle: `docs/history/2026-11-06_reserva-listado-fecha-pasada-vaciar-opcionales--developer.md`.\n"
+    },
+    {
+      "filename": "20261106-guarda-borrado-codigo-400.md",
+      "title": "\"Borrado con guarda: ahora responde 400\"",
+      "excerpt": "",
+      "tags": [
+        "arquitectura",
+        "plantillas"
+      ],
+      "date": "2026-11-06",
+      "content": "# Borrado con guarda: ahora responde 400\n\n## Descripción\n\n### Contexto\nLas plantillas de borrado con comprobación previa de referencias devolvían 409.\n\n### Porqué\nSe unificó con el resto de errores de negocio, ya validado en Estados y Tarifas.\n\n### Detalle\nLas tres plantillas afectadas usan 400. El módulo de bodegas conserva 409 por ser anterior a esta decisión.\n"
+    },
+    {
+      "filename": "20261106-getbyid-8-claves-checklist-isvaliddecrypted.md",
+      "title": "\"Docs: Base_GetByID con 8 claves y recuento de isValidDecrypted en el Delete\"",
+      "excerpt": "",
+      "tags": [
+        "documentacion",
+        "crud-normal"
+      ],
+      "date": "2026-11-06",
+      "content": "# Docs: Base_GetByID con 8 claves y recuento de isValidDecrypted en el Delete\n\n## Descripción\n\n### Contexto\nLas lecturas por id usan `Base_GetByID`, que no necesita `limit`.\n\n### Porqué\nSe cerraba una duda recurrente en las revisiones.\n\n### Detalle\nQueda documentado que el array-query lleva 8 claves sin `limit` y que no hay que reportarlo. El checklist de CRUD Normal cuenta 2 `isValidDecrypted` (View y GetID) más 1 si el Delete lleva guarda, con una comprobación específica del Delete.\n"
+    },
+    {
+      "filename": "20261106-fix-bloqueos-revision.md",
+      "title": "\"Bloqueos de agenda: guarda Manual, validaciones previas al lock y errores 400/500 exactos\"",
+      "excerpt": "Registro tecnico: docs/history/2026-11-06fix-bloqueos-revision--developer.md.",
+      "tags": [
+        "reserva-servicios",
+        "bloqueos",
+        "fix"
+      ],
+      "date": "2026-11-06",
+      "content": "# Bloqueos de agenda: guarda Manual, validaciones previas al lock y errores 400/500 exactos\n\n## Descripción\n\n### Contexto\nLa revision de TASK-006.4 detecto que el mantenedor de bloqueos permitia editar y borrar retenciones del portal, devolvia 400 ante fallos de consulta, heredaba reglas no documentadas y tomaba el lock del trabajador antes de validar.\n\n### Porqué\nProteger las retenciones en curso, dar respuestas HTTP correctas y especificar las reglas del modulo.\n\n### Detalle\n- Solo se listan, editan y borran bloqueos Manual; las retenciones responden 400.\n- Duracion minima de 30 minutos y fecha no anterior a hoy, con mensajes propios.\n- El solape con una reserva activa responde 400 (antes 409); otros bloqueos o retenciones no lo provocan.\n- Errores de consulta del helper responden 500 generico; un rango de fechas invalido en el filtro responde 400.\n- Las validaciones de datos corren antes de abrir la transaccion y tomar el lock.\n- Specs actualizadas (RN-018, api, technical con la dependencia del lock de fila del trabajador).\n\nRegistro tecnico: `docs/history/2026-11-06_fix-bloqueos-revision--developer.md`.\n"
+    },
+    {
+      "filename": "20261106-controlador-reserva-servicios-promociones.md",
+      "title": "Controlador de promociones de reserva de servicios",
+      "excerpt": "Se crea reservaServiciosPromociones.php en el módulo reservasservicios siguiendo el patrón de Tarifas: listado con filtro (tipo, activo, nombre, rango de VigenciaDesde), vista, edición, alta, edición…",
+      "tags": [
+        "reservas_servicios",
+        "crud-normal",
+        "promociones"
+      ],
+      "date": "2026-11-06",
+      "content": "## Descripción\n\nSe crea `reservaServiciosPromociones.php` en el módulo `reservas_servicios` siguiendo el patrón de Tarifas: listado con filtro (tipo, activo, nombre, rango de VigenciaDesde), vista, edición, alta, edición y borrado. El borrado se rechaza con 400 si la promoción está usada en `reserva_servicios_listado`. La edición deja `VigenciaHasta` en NULL cuando llega vacía.\n\nRegistro técnico: `docs/history/2026-11-06_controlador-reserva-servicios-promociones--developer.md`.\n"
+    },
+    {
+      "filename": "20261106-cobertura-guarda-recargo.md",
+      "title": "\"Cobertura: guarda de Recargo negativo\"",
+      "excerpt": "",
+      "tags": [
+        "fix",
+        "cobertura"
+      ],
+      "date": "2026-11-06",
+      "content": "# Cobertura: guarda de Recargo negativo\n\n## Descripción\n\n### Contexto\nRevisión de TASK-007.4 sobre el CRUD Resumen de Cobertura.\n\n### Porqué\n`Recargo` aceptaba valores negativos frente a una columna `decimal unsigned`, lo que daba un 500 genérico.\n\n### Descripción\nInsert y Update rechazan un `Recargo` negativo con rollback y un 400 claro. Se corrigió además el criterio de aceptación de TASK-007.1.12 para reflejar que `contarReservasFuturas` devuelve el array de `Base_GetCountData`. Verificado solo con `php -l`.\n"
+    },
+    {
+      "filename": "20261106-cobertura-controlador-vistas.md",
+      "title": "\"Mantenedor de Cobertura de Reserva de Servicios: controlador y vistas\"",
+      "excerpt": "Se crea el controlador reservaServiciosCobertura y sus siete vistas como CRUD Resumen con ficha de pestañas.",
+      "tags": [
+        "reservas-servicios",
+        "crud-resumen"
+      ],
+      "date": "2026-11-06",
+      "content": "# Mantenedor de Cobertura de Reserva de Servicios: controlador y vistas\n\n## Resumen\n\nSe crea el controlador `reservaServiciosCobertura` y sus siete vistas como CRUD Resumen con ficha de pestañas.\n\n## Descripción\n\n### Contexto\n\nLa cobertura define qué comunas atiende el servicio, con un recargo y los trabajadores asignados. Faltaba su mantenedor en el backoffice.\n\n### Porqué\n\nCompletar TASK-007.1 y TASK-007.2 del proyecto de administración de reserva de servicios.\n\n### Descripción\n\n- Listado con filtro por comuna y estado, alta en modal que redirige a la ficha, y ficha con pestañas Resumen, Editar Datos y Trabajadores.\n- Una comuna con reservas futuras activas no se puede borrar (400); al borrar una cobertura se borran también sus trabajadores.\n- Solo se ha verificado la sintaxis (`php -l`); falta la suite y la revisión (TASK-007.3 y 007.4).\n\nRegistro técnico: `docs/history/2026-11-06_task-007-1-2-cobertura-controlador-vistas--developer.md`.\n"
+    },
+    {
+      "filename": "20261106-actualizacion-pruebas-modulo-archivos.md",
+      "title": "Actualización de pruebas del módulo archivos (Gestor de Documentación)",
+      "excerpt": "Se actualizó la suite de pruebas del módulo archivos (Gestor de Documentación / explorador de archivos del panel de administración) para que refleje el código real del controlador y la vista.",
+      "tags": [
+        "Pruebas",
+        "Módulo archivos",
+        "sistemaTesteos"
+      ],
+      "date": "2026-11-06",
+      "content": "# Actualización de pruebas del módulo archivos\n\n## Resumen\n\nSe actualizó la suite de pruebas del módulo `archivos` (Gestor de Documentación / explorador de archivos del panel de administración) para que refleje el código real del controlador y la vista.\n\n## Descripción\n\n### Contexto\nEl módulo `admin/app/modules/archivos` ya había sido refactorizado: su controlador extiende `ControllerFiles`, concede el ámbito de autorización con `ScopeAccess::grant`, deniega el acceso con HTTP 403 sin nivel suficiente y usa el widget dedicado `UIWidgetsFileExplorer`. La vista envía el ámbito `AccessScope` y la ruta base `fileExplorer`. Sin embargo, la suite de pruebas aún esperaba el widget antiguo (`UIWidgetsCommon`) y no cubría el gate de autorización.\n\n### Qué se hizo\n- Se corrigió el caso que verificaba la instancia del widget (`UIWidgetsFileExplorer` en lugar de `UIWidgetsCommon`).\n- Se añadieron casos de concesión de ámbito, denegación 403 y constructor sin dependencia de base de datos.\n- Se reforzó el contrato de la vista: valor de `Route`, presencia de `AccessScope` e invocación a `Fnc_WidgetsFileExplorer`.\n- Se agregó la prueba `autorizacionListadoTest`, que valida con un doble de F3 (sin tocar la base de datos) que `listAll()` deniega con HTTP 403 sin nivel de acceso y deja pasar el gate con nivel suficiente.\n\nLa suite queda con 10 pruebas automatizadas (`*Test`) descubiertas por `sistemaTesteos`, sin ejercitar el instalador ni subidas reales de archivos (ámbito intencional, igual que en el resto de módulos).\n\n## Notas\n\nNo hubo cambios en controlador, vista, installer ni en ninguna otra parte del sistema. Solo se modificó `admin/app/modules/archivos/testing/archivosTesting.php`. Se validó sintaxis con `php -l` (PHP 8.3.6)."
+    },
+    {
+      "filename": "20261104-formato-blog-change-logs.md",
+      "title": "\"El registro de cambios adopta el formato de blog\"",
+      "excerpt": "Los resúmenes divulgativos del proyecto ahora se publican como posts de blog: nombre YYYYMMDD-titulo-descriptivo.md, frontmatter opcional con title y tags, y contenido en Markdown. Además se retiró el…",
+      "tags": [
+        "blog",
+        "change-logs",
+        "documentacion",
+        "agents"
+      ],
+      "date": "2026-11-04",
+      "content": "# El registro de cambios adopta el formato de blog\n\n## Resumen\n\nLos resúmenes divulgativos del proyecto ahora se publican como posts de blog: nombre `YYYYMMDD-titulo-descriptivo.md`, frontmatter opcional con `title` y `tags`, y contenido en Markdown. Además se retiró el resumen semanal y el script que generaba los índices históricos.\n\n## Descripción\n\n### Contexto\n\n- `docs/change_logs/` tenía 163 entradas con nombres `YYYY-MM-DD_<slug>.md` y frontmatter `titulo`, `categoria`, `fecha`, `autor_ia`, `tags`, `cambio_relacionado`.\n- El agent `chronicler` generaba posts semanales en `docs/change_logs/resumenes/AAAA-SS.md`; existía `2026-43.md`.\n- `docs/tools/history-index.sh` generaba `docs/history/{INDEX,DECISIONES,PENDIENTES}.md` y validaba el frontmatter con `--lint`.\n- El script y el chronicler estaban referenciados en `AGENTS.md`, `README.md`, `agents/README.md`, `agents/triage`, `agents/documentation`, `skills/README.md`, los envoltorios `.opencode/agents/*.md`, `.claude/agents/triage.md`, `.claude/settings.local.json` y varios registros de `projects/`.\n- El directorio no es un repositorio git, así que no había red de seguridad para renombrados ni borrados.\n\n### Porqué\n\nEl usuario pidió adaptar el registro de `docs/change_logs/` a un formato de blog estático: nombre `YYYYMMDD-titulo-descriptivo.md`, frontmatter opcional con `title` y `tags`, y contenido Markdown. También pidió eliminar el resumen semanal guardado en `resumenes/` y el script `docs/tools/history-index.sh`.\n\n### Descripción\n\n- **Renombrado:** 163 entradas de `docs/change_logs/` pasaron de `YYYY-MM-DD_<slug>.md` a `YYYYMMDD-<slug>.md`. Se pasaron a minúsculas dos slugs con mayúsculas (`idBodegas` y `mantencionSistema`).\n- **Frontmatter:** cada entrada quedó con `title` y `tags` (lista YAML); se eliminaron `titulo`, `categoria`, `fecha`, `autor_ia`, `cambio_relacionado` y `amplia`. Los títulos sin comillas se reescribieron como cadenas YAML válidas.\n- **Cuerpo:** se normalizaron los encabezados `## Resumen (2-3 líneas para el blog)`, `## Contenido del cambio (…)` y `## Notas (…)` a `## Resumen`, `## Contenido del cambio` y `## Notas`. Se añadió `# Título` a los dos ficheros que no lo tenían.\n- **Casos irregulares corregidos:** dos ficheros sin `---` de apertura y uno sin frontmatter se migraron a la estructura estándar.\n- **Referencias:** 159 enlaces `cambio_relacionado` de `docs/history/` y los enlaces de `docs/history/INDEX.md` y `_normalizacion.md` se actualizaron a los nombres nuevos. Se validó que no queda ninguna referencia rota.\n- **Borrados:** `docs/change_logs/resumenes/` (con `2026-43.md`), `docs/tools/` y `history-index.sh`, `agents/chronicler/`, `skills/chronicler/`, `.opencode/agents/chronicler.md` y `.claude/agents/chronicler.md`.\n- **Retirada del chronicler:** se quitaron sus filas y referencias de `AGENTS.md`, `README.md`, `agents/README.md`, `agents/triage/instructions.md`, `skills/README.md` y del vocabulario `agente` de `docs/history/README.md`.\n- **Script retirado:** se quitaron las instrucciones de `--lint` y regeneración de `AGENTS.md`, `README.md`, `agents/README.md`, `agents/triage`, `agents/documentation`, los envoltorios y `.claude/settings.local.json`. Los índices se conservan congelados y sus cabeceras lo indican.\n- **Documentación nueva:** `docs/change_logs/README.md` y `_template.md` describen el formato blog; `docs/history/README.md` enlaza el nuevo formato y documenta que los índices ya no se regeneran.\n- **`projects/`:** no se tocó, por la regla de alcance de peticiones puntuales. Algunos registros de proyecto siguen mencionando `docs/tools/history-index.sh` como referencia histórica.\n\n## Contenido del cambio\n\n- Las 163 entradas existentes se renombraron al formato `YYYYMMDD-<slug>.md` y adoptaron `title` y `tags`.\n- El contenido sigue siendo el mismo: resumen, explicación del cambio y notas.\n- La trazabilidad con la memoria técnica se mantiene desde `docs/history/`, que apunta a cada post con `cambio_relacionado`.\n- Se eliminó la carpeta de resúmenes semanales y el agent que los generaba.\n- Los índices de `docs/history/` se conservan como archivos históricos, pero ya no se regeneran automáticamente.\n- Los posts nuevos no necesitan frontmatter: si falta, el título se toma del primer `# Título`.\n\n## Notas\n\nEste cambio no afecta al código de la aplicación. Afecta a la organización de `docs/change_logs/` y a las referencias documentales. Los registros de `projects/` no se modificaron.\n"
+    },
+    {
+      "filename": "20261104-convenciones-tipos-transaccion.md",
+      "title": "\"Cinco tipos de transacción y una arquitectura que cabe en un modelo pequeño\"",
+      "excerpt": "La documentación del proyecto ahora define cinco tipos de artefacto: CRUD Normal, CRUD Resumen, Informe, Installer y Widgets. Cada uno tiene métodos obligatorios, opcionales y prohibidos, y plantillas…",
+      "tags": [
+        "arquitectura",
+        "sdd",
+        "skills",
+        "transacciones",
+        "dry"
+      ],
+      "date": "2026-11-04",
+      "content": "# Cinco tipos de transacción y una arquitectura que cabe en un modelo pequeño\n\n## Resumen\n\nLa documentación del proyecto ahora define cinco tipos de artefacto: CRUD Normal, CRUD Resumen, Informe, Installer y Widgets. Cada uno tiene métodos obligatorios, opcionales y prohibidos, y plantillas listas para rellenar. La arquitectura quedó partida en archivos cortos, de un solo tema, que un modelo de IA pequeño puede leer completos.\n\n## Descripción\n\n### Contexto\n\n`docs/architecture/` tenía 11 archivos grandes (hasta 436 líneas) y mezclaba patrones de CRUD, informes, installer y widgets en `development-patterns.md`. Las skills repetían en \"Convenciones del proyecto\" lo que ya estaba en la arquitectura. No había una definición formal de los tipos de transacción, ni recetas para generar tasks SDD por tipo.\n\n### Porqué\n\nLo pidió el usuario: reglas por tipo (CRUD Normal, CRUD Resumen, Informe, Installer, Widgets) con métodos, consultas, vistas y checkeo POST obligatorios y opcionales; arquitectura dividida para que la lea una IA de 1B-4B; skills que sean solo procedimiento; DRY estilo `bodegasListado` en los proyectos SDD nuevos; y sin texto histórico redundante.\n\n### Descripción\n\n- `docs/architecture/`: nuevo `README.md` (mapa tarea → archivos), `glossary.md`, `core/`, `transactions/` (5 tipos con `methods`, `checklist` y plantillas fill-in por método), `write-cases/` (11 casos de escritura con plantilla), `data/`, `patterns/`, `ui/`, `api/`, `security/`, `testing/`, `conventions/` y `sdd/` (`task-rules`, `verification` y `recipe-<tipo>`). Se eliminaron `architecture.md`, `modules.md`, `conventions.md`, `conventions-sdd-generacion.md`, `database.md`, `api.md`, `security.md`, `testing.md`, `documentation-standards.md` y `development-patterns.md`.\n- `docs/architecture/reserva_limpieza_admin_resumen_funcionamiento.md` se movió a `projects/reserva_limpieza_admin/resumen-funcionamiento.md`, sin la sección de estado.\n- `docs/architecture/decisions/`: rutas re-enlazadas en 0001, 0005, 0006, 0007 y 0008.\n- `skills/`: todas en formato Objetivo · Cuándo · Lee · Procedimiento · Errores · Checklist. `javascript` se fusionó en `frontend`. Hay una skill nueva, `transactions`.\n- `agents/`, `AGENTS.md`, `README.md`: la lectura previa pasa por el mapa. El architect usa `recipe-<tipo>` y el reviewer verifica contra `transactions/<tipo>/checklist.md`. Se fusionó `flujo.md` en `agents/README.md` y se borró.\n- `projects/README.md`: la hoja tiene los campos nuevos `Tipo transacción`, `Receta`, `Contexto mínimo` y `Valores`.\n- `root_plataforma/controller/crud{Resumen,Informe,ResumenObservaciones}.php`: refactor DRY con helpers privados `getDataList`, `getDataDetail*` y `getDataEdit`.\n- Bugs corregidos:\n  - `cotizacionListado`: `updateCotizacion` se llamaba tras el commit y en Update recibía `[]`. Ahora se ejecuta dentro de la transacción con el id correcto.\n  - `gestionDocumentos`: la comparación de `idTipo` era estricta entre string e int; en el bucle de borrado se reportaba otro error; faltaba validar `rowMovimiento`.\n  - `bodegasListado-Resumen.php`: `distZonaDel` usaba una variable PHP desde JS.\n  - `informeProductos`: `showError(1)` en listAll, `Print` reescrito sobre tablas reales y `mergeResponses`.\n\n## Contenido del cambio\n\n- Un mapa (`docs/architecture/README.md`) indica qué archivos leer, como máximo tres, según la tarea.\n- Cada tipo tiene su lista de métodos, vistas, validaciones y un checklist de conformidad.\n- Once casos de escritura documentados con su plantilla: alta simple, maestro-detalle, borrado en cascada, borrado protegido, recálculo con bloqueo y otros.\n- Las tasks SDD incluyen ahora la plantilla exacta y el contexto mínimo que debe leer quien las ejecute.\n- Las skills se dedican solo a describir procedimientos, y se eliminó el texto histórico repetido.\n- Se corrigieron fallos en cotizaciones (recálculo de totales al editar), facturación (ventas con productos, borrado de documentos), bodegas (borrado de zonas) y el informe de stock.\n\n## Notas\n\nSin breaking changes de código. Los agentes leen rutas nuevas de `docs/architecture/`. Las rutas de las skills se mantienen, salvo `skills/javascript`, que se fusionó en `skills/frontend`.\n"
+    },
+    {
+      "filename": "20261104-bloque-descripcion-change-logs.md",
+      "title": "\"Cada resumen de cambio incluye ahora una descripción completa\"",
+      "excerpt": "Los posts de docs/changelogs/ incorporan un bloque Descripción entre el resumen y el contenido del cambio. El bloque explica el contexto previo, el porqué de la tarea y qué se hizo, para que cada entr…",
+      "tags": [
+        "blog",
+        "change-logs",
+        "documentacion",
+        "agents"
+      ],
+      "date": "2026-11-04",
+      "content": "# Cada resumen de cambio incluye ahora una descripción completa\n\n## Resumen\n\nLos posts de `docs/change_logs/` incorporan un bloque `## Descripción` entre el resumen y el contenido del cambio. El bloque explica el contexto previo, el porqué de la tarea y qué se hizo, para que cada entrada se entienda sin abrir el historial técnico.\n\n## Descripción\n\n### Contexto\n\nLos change_logs tenían un resumen breve, el contenido del cambio y las notas. Faltaba el punto de partida, la motivación y el detalle completo de la tarea ejecutada, que sí estaban en las entradas técnicas de `docs/history/`.\n\n### Porqué\n\nEl usuario pidió que cada post describiera la tarea ejecutada por completo, separando contexto, porqué y descripción, y que ese bloque apareciera entre `## Resumen` y `## Contenido del cambio`.\n\n### Descripción\n\nSe añadió el bloque a las 164 entradas existentes. El contenido se tomó de las secciones 1, 2 y 3 de la entrada correspondiente de `docs/history/`, emparejada por `cambio_relacionado` o por fecha y slug. Las dos entradas con estructura especial se trataron aparte: la de SSRF, con encabezados H1, y la de observaciones, sin `## Resumen` ni `## Contenido del cambio`. También se actualizaron la plantilla y el README de `docs/change_logs/`.\n\n## Contenido del cambio\n\n- Nuevo bloque `## Descripción` con `### Contexto`, `### Porqué` y `### Descripción`.\n- Contenido reutilizado del historial técnico, sin inventar datos.\n- Plantilla y README actualizados para las entradas futuras.\n- Las 164 entradas conservan su resumen, su contenido y sus notas.\n\n## Notas\n\nNo hay breaking changes de código. Las descripciones pueden incluir rutas internas del proyecto; conviene revisarlas antes de publicarlas en un blog público.\n"
+    },
+    {
+      "filename": "20261103-flujo-dependencias-agentes.md",
+      "title": "\"Árbol de dependencias y guía de la capa agents\"",
+      "excerpt": "Se añade un fichero flujo.md en la raíz del repositorio que documenta el árbol de dependencias de la capa agents/ y explica qué hace cada uno de sus archivos, para facilitar cambios futuros conociendo…",
+      "tags": [
+        "agents",
+        "dependencias",
+        "documentacion",
+        "flujo"
+      ],
+      "date": "2026-11-03",
+      "content": "# Árbol de dependencias y guía de la capa agents\n\n## Resumen\n\nSe añade un fichero `flujo.md` en la raíz del repositorio que documenta el árbol de dependencias de la capa `agents/` y explica qué hace cada uno de sus archivos, para facilitar cambios futuros conociendo las relaciones entre agents.\n\n## Descripción\n\n### Contexto\n\nEl usuario solicita un archivo `flujo.md` que muestre el árbol de dependencias de la carpeta `@agents/` (en este repositorio la carpeta real es `agents/`) y explique qué hace cada archivo, para poder hacer cambios conociendo las relaciones entre los agents.\n\nPreviamente no existía ningún fichero `flujo.md` en la raíz del repositorio. La única visión consolidada de la capa agents era el contrato común `agents/README.md` junto con los `instructions.md` individuales de cada agent.\n\n### Porqué\n\nConocer cómo están relacionados los files de `agents/` y la responsabilidad de cada uno antes de realizar modificaciones, evitando romper el contrato común y el protocolo de registro doble obligatorio.\n\n### Descripción\n\n- Creación de `/mnt/Desarrollos/Entornos/docker_entorno_lamp/www/coreEngine/flujo.md` con:\n  - Árbol de archivos de la carpeta `agents/` (incluyendo `AGENTS.md`, `README.md`, `docs/architecture/`, `skills/` y los 11 agents con sus `instructions.md` y `README.md`).\n  - Tabla de relaciones clave (dependencias) entre cada `instructions.md` y los recursos que usa.\n  - Descripción detallada de qué hace cada uno de los 23 archivos (`agents/README.md` + 11 pares de `instructions.md`/`README.md`).\n  - Flujo típico de una petición (Triage → Architect → Developer → Reviewer → Debugger → Documentation → Registro doble).\n  - Recomendación antes de hacer cambios.\n\n## Contenido del cambio\n\nEl documento reúne en un solo sitio: el árbol completo de archivos de `agents/` (11 agents con su `instructions.md` y `README.md`, más el `README.md` común), una tabla de dependencias entre cada agent y los recursos que usa, la descripción de la responsabilidad de cada archivo, el flujo típico de una petición (Triage → Architect → Developer → Reviewer → Debugger → Documentation → registro doble) y una lista de recomendaciones antes de modificar la capa agents.\n\n## Notas\n\nNo hay cambios que rompan la compatibilidad ni acción requerida para el usuario. Es un fichero de consulta únicamente.\n"
+    },
+    {
+      "filename": "20261102-resumen-funcionamiento-reserva-limpieza-admin.md",
+      "title": "\"Resumen de funcionamiento y diagrama de flujo del módulo reserva_limpieza (admin)\"",
+      "excerpt": "Se documenta el funcionamiento completo del backoffice de reservas de limpieza: desde los datos maestros y transacciones que alimentan la reserva, pasando por las etapas de la aplicación principal, el…",
+      "tags": [
+        "reserva_limpieza",
+        "flujo",
+        "documentacion",
+        "diagrama",
+        "transacciones"
+      ],
+      "date": "2026-11-02",
+      "content": "# Resumen de funcionamiento del módulo reserva_limpieza (admin)\n\n## Resumen\n\nSe documenta el funcionamiento completo del backoffice de reservas de limpieza: desde los datos maestros y transacciones que alimentan la reserva, pasando por las etapas de la aplicación principal, el uso de bloqueo (`FOR UPDATE`), los 15 estados y su matriz de transiciones, hasta un diagrama de flujo en Mermaid.\n\n## Descripción\n\n### Contexto\n\nEl proyecto `reserva_limpieza_admin` tiene sus documentos SDD completos (`requirements/`, `specs/` con functional, technical, database, api, security y flujo, `architecture/`, `tasks/` en árbol atómico con 388 hojas, `implementation/` en curso y `validation/`). No existía un único documento que conectara el flujo completo de transacciones, estados, bloqueo y datos a rellenar en un resumen de funcionamiento consultable.\n\n### Porqué\n\nEl usuario pidió crear el resumen de funcionamiento del módulo a partir de las specs y tareas existentes, contemplando: transacciones que alimentan la parte principal (datos a rellenar, origen BD vs ingreso manual), aplicación principal por etapas (qué se llena, uso de bloqueo, estados y casos de generación), y un diagrama de flujo.\n\n### Descripción\n\n- `docs/architecture/reserva_limpieza_admin_resumen_funcionamiento.md` (nuevo): resumen de funcionamiento con 11 secciones:\n  1. Alcance y actores\n  2. Datos maestros (qué se rellena, origen BD/manual)\n  3. Transacciones T1–T5 que alimentan la parte principal (alta, cambio de estado, retención, borrado, expiración)\n  4. Aplicación principal por etapas (flujo web y admin, qué se llena en cada etapa)\n  5. Bloqueo y concurrencia (`FOR UPDATE`, retenciones, orden de locks)\n  6. 15 estados y matriz de transiciones\n  7. Diagrama de flujo (4 bloques Mermaid: ciclo de vida, alta T1, cambio de estado T2, conexión entre transacciones)\n  8. Relaciones entre tablas (sin FK)\n  9. Códigos de error y rollback\n  10. Estado de implementación\n  11. Referencias\n\n## Contenido del cambio\n\nAhora existe un único documento de referencia que explica paso a paso cómo se conectan las operaciones de reserva: cada transacción indica sus pasos, los datos que toca, si se alimentan de la base de datos o requieren ingreso manual, cómo se usa el bloqueo, los estados posibles y los casos en que se generan. Todo se apoya en los specs y tasks del proyecto para no inventar nada.\n\n## Notas\n\nSin breaking changes ni acción requerida.\n"
+    },
+    {
+      "filename": "20261031-sync-architecture-modulos.md",
+      "title": "\"La documentación de arquitectura vuelve a reflejar el código real\"",
+      "excerpt": "La documentación de arquitectura se ha alineado con los 20 módulos actuales del backoffice. Se describen los patrones reales de transacciones y errores, y las decisiones arquitectónicas vigentes se en…",
+      "tags": [
+        "arquitectura",
+        "modulos",
+        "adr",
+        "documentacion"
+      ],
+      "date": "2026-10-31",
+      "content": "# La documentación de arquitectura vuelve a reflejar el código real\n\n## Resumen\n\nLa documentación de arquitectura se ha alineado con los 20 módulos actuales del backoffice. Se describen los patrones reales de transacciones y errores, y las decisiones arquitectónicas vigentes se enlazan desde las secciones a las que aplican.\n\n## Descripción\n\n### Contexto\n\n`docs/architecture/` describía un estado anterior del código:\n\n- `modules.md` (auditado el 2026-10-02) listaba módulos sin controladores (`—`), no recogía los sub-controladores nuevos de `bodegas` (Zonas, Pasillos, Racks, Distribucion), ni la carpeta `functions/` de `campanas`, y tenía líneas de `maquinas` coladas en el árbol de `bodegas`.\n- `database.md` y `api.md` presentaban `ControllerBase::failOperation()` como manejo canónico de fallos de escritura, con una \"migración completa 2026-10-14\". Ese helper **ya no existe** en `vendors/application/controller/ControllerBase.php`; todos los controllers usan rollback inline + `Response::error('Error al operar con la Base de Datos', 500, ...)` (p. ej. `bodegasListado.php:586-663`).\n- No se documentaban `ControllerFiles`, la API real de `ControllerInstaller`, `WidgetsOrderService`, los ficheros de rutas `userMiUsuario.php` / `userPasswordForzada.php`, el autoload de `functions/` (`admin/public/index.php:70`) ni la evolución idempotente del esquema en los installers.\n- `decisions/README.md` indexaba ADR-0003 (`failOperation`) y ADR-0004 (largo máximo por campo), cuyos ficheros no existen; ADR-0001 citaba ADR-0003.\n- Los docs no enlazaban los ADR vigentes desde las secciones a las que aplican.\n\nDurante la revisión el árbol cambió: `reserva_limpieza` desapareció de `admin/app/modules/` y aparecieron 14 módulos más (20 en total). La documentación refleja el estado final verificado.\n\n### Porqué\n\nPetición del usuario: revisar `admin/app/modules/`, actualizar `docs/architecture/` a la configuración actual e integrar los ADR de `docs/architecture/decisions/`. Aclaraciones del usuario:\n\n- Integrar significa **referenciar** los ADR desde los docs, manteniéndolos como ficheros.\n- **Eliminar toda referencia a ADR-0003 y ADR-0004**, que ya no se utilizan.\n- Los módulos que faltaban se han vuelto a añadir al árbol.\n\n### Descripción\n\n- `docs/architecture/architecture.md`:\n  - Árbol con `ControllerFiles`, `CsrfToken`, `ScopeAccess` y `FunctionsReservaLimpieza`; `sites_*` marcado como no presente.\n  - Helpers con `WidgetsOrderService`; autoload con `functions/`; rutas en modo contraseña forzada.\n  - Tabla de núcleo con la API real de `ControllerBase`, `ControllerFiles` y `ControllerInstaller`.\n  - Carpeta `functions/` en la estructura de módulo; regla 5 de integración.\n  - Nueva §8 \"Decisiones arquitectónicas vigentes (ADR)\" con 0001/0002/0005, enlazados a las secciones donde aplican.\n- `docs/architecture/modules.md`: reescrito.\n  - Tabla de los 20 módulos con controladores reales y columnas I/T/W/F.\n  - Nota de `reserva_limpieza` planificado (ADR-0005).\n  - Árbol de `bodegas` actualizado (9 controladores, 9 suites, widgets).\n  - Tabla obligatorio/opcional con `functions/`, `ControllerFiles` y los módulos sin installer.\n  - Patrones 2, 4, 8 y 10 (controllerName/viewName, transacción, `Int_Fnc_*`, wrappers `_N`).\n  - Mapa de dependencias desde `ListDataModule()`.\n- `docs/architecture/database.md`:\n  - INSERT, DELETE y §9 con el patrón inline real (rollback antes de cada error, también si falla el commit). Sin `failOperation`.\n  - §4 reescrito sobre ADR-0001 y ADR-0002 (transacciones anidadas con `$NewDBConn`, puntos de lock actuales, excepción `testeos.php`).\n  - §7 con la evolución idempotente sin versionado (`IF NOT EXISTS`, `seed*` con `INSERT IGNORE`, orden de `InstallModule`).\n- `docs/architecture/api.md`:\n  - Inventario completo de `admin/app/utils/*.php`.\n  - Anatomía del endpoint con transacción/lock (ADR-0001/0002) y error inline; sin la referencia a `projects/failoperation-plataforma`.\n  - Códigos 409/419 añadidos a la tabla.\n- `docs/architecture/development-patterns.md`:\n  - Esqueleto CRUD con transacción y `delFiles`; enlace a ADR-0001 y a las plantillas `crudNormal`/`crudResumen`.\n  - Installer sobre `ControllerInstaller`.\n  - Nuevas §1.5 (helpers `functions/`), §2.1 (sub-controlador que comparte permisos) y §3.1 (read-modify-write, ADR-0002).\n  - §5 de widgets con `WidgetsOrderService` y los dos formatos de `Menu_Value`.\n  - Errores clásicos 2, 8 y 9.\n- `docs/architecture/conventions.md`:\n  - Origen generalizado; fila de helper interno.\n  - Bases `ControllerFiles`/`ControllerInstaller`; `delFiles` frente a `->DelFiles` en rutas.\n  - Métodos de sub-entidad y wrappers; claves `Fnc_*`/`Int_Fnc_*`; `controllerName`/`viewName`.\n- `docs/architecture/security.md`:\n  - CSRF también en `ControllerFiles::beforeroute`; se corrige el anidado de la config CSRF, que estaba mal colocado bajo `ScopeAccess`.\n  - Consumidores y umbrales de `ScopeAccess`.\n  - El nivel no se re-verifica en el controlador.\n  - `.htaccess` en `controller/` y `functions/`; aviso sobre ficheros `.bak`.\n- `docs/architecture/testing.md`: nueva §4.3 \"Módulos con suite\"; anti-patrón 6 (suites que afirman `failOperation(`).\n- `docs/architecture/decisions/README.md`: eliminadas las filas 0003 y 0004; nota de que los números retirados no se reutilizan.\n- `docs/architecture/decisions/0001-transacciones-en-escrituras.md`: en §Decisión punto 2 se elimina solo el inciso \"(o dentro de `failOperation()`, ADR-0003)\". Es una edición mínima de un ADR aceptado, hecha por petición expresa del usuario y aprobada en el plan; la decisión no cambia.\n- `docs/history/DECISIONES.md`, `INDEX.md`, `PENDIENTES.md`: regenerados con `docs/tools/history-index.sh` (la tabla de ADR vigentes ya no lista 0003/0004).\n\n## Contenido del cambio\n\n- Inventario completo de módulos: controladores, instalador, pruebas, widgets, helpers internos y dependencias entre módulos.\n- Patrones nuevos documentados:\n  - helpers internos por módulo (`functions/`);\n  - sub-controladores que comparten permisos (distribución física de bodegas);\n  - widgets con orden configurable;\n  - instaladores idempotentes;\n  - controladores sin base de datos.\n- El manejo de errores de escritura se documenta como está implementado: rollback y respuesta en cada controlador.\n- Las decisiones vigentes (transacciones, bloqueo por concurrencia y helper de reserva de limpieza) se citan donde aplican. Se retiran del índice las dos decisiones que ya no se usan.\n- Quedan registrados como pendientes los defectos encontrados durante la revisión.\n\n## Notas\n\nSin breaking changes. Acción recomendada: actualizar las suites de pruebas que aún esperan el antiguo helper `failOperation` (detalle en la entrada de history).\n"
+    },
+    {
       "filename": "20261023-verificacion-manual-login-ui.md",
       "title": "Verificado el inicio de sesión del backoffice en navegador",
       "excerpt": "Se comprobó de extremo a extremo el formulario de acceso del panel de administración en un navegador real: el usuario introduce sus credenciales, el sistema las valida y lo lleva al panel principal co…",
